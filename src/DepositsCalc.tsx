@@ -1,115 +1,82 @@
-import React, {ChangeEvent, ReactNode, useCallback} from 'react';
+import React, {ChangeEvent, useCallback} from 'react';
 import './App.css'
-import {DepositProps} from "./store/types/deposits";
+import CustomSelect from "./components/CustomSelect";
+import {depositTypes} from "./App";
+import {percentUnicValue} from "./functions/percentUnicValue";
+import {percentStandartValue} from "./functions/percentStandartValue";
+import {percentReplenishValue} from "./functions/percentReplenishValue";
 
 interface DepositsCalcProps {
-    data?: DepositProps[]
-    sumValue: string
-    sumReplValue: string
-    period: string
+    deposit: string
+    onChangeDeposit: (value: string) => void
+    // sumValue: string
+    // sumReplValue: string
+
+
+    // onChangeSum: (e: ChangeEvent<HTMLInputElement>) => void
+    unicResultClick: (sum: number, period: number, percent: number) => void
+    unicBet: number | undefined
+    replBet: number | undefined
+    standBet: number | undefined
     periodRepl: string
-    onChangeValue: (e: ChangeEvent<HTMLInputElement>) => void
+    periodStand: string
+    replSumValue: string
+    standSumValue: string
+    unicSumValue: string
+    periodUnic: string
+    inputSum: string
+    inputPeriod: string
+    onChangeUnicSum: (e: ChangeEvent<HTMLInputElement>) => void
+    onChangeStandSum: (e: ChangeEvent<HTMLInputElement>) => void
+    onChangeReplSum: (e: ChangeEvent<HTMLInputElement>) => void
+    onChangeUnicPeriod: (e: ChangeEvent<HTMLInputElement>) => void
+    onChangeStandPeriod: (e: ChangeEvent<HTMLInputElement>) => void
+    onChangeReplPeriod: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const DepositsCalc = (props: DepositsCalcProps) => {
 
     const {
-        data,
-        onChangeValue,
-        period,
+        deposit,
+        onChangeDeposit,
+        // onChangeSum,
+
+
+        // sumReplValue,
+        // sumValue
+
+        periodUnic,
+        unicResultClick,
+        unicBet,
+        replBet,
+        standBet,
         periodRepl,
-        sumReplValue,
-        sumValue
+        standSumValue,
+        replSumValue,
+        periodStand,
+        unicSumValue,
+        inputSum,
+        inputPeriod,
+        onChangeReplSum,
+        onChangeStandSum,
+        onChangeUnicSum,
+        onChangeReplPeriod,
+        onChangeStandPeriod,
+        onChangeUnicPeriod,
+
     } = props
 
 
-
-    const depositName: ReactNode = data?.map(({name}) => {
-        return (
-            <option key={name}>{name}</option>
-        )
-    })
-
-    const percentUnicValue = (sum: string, per: string) => {
-
-        let result = ''
-
-        if (per === '1' && sum >= '1000000' && sum < '10000000') {
-            return result = '2'
-        }
-
-        if (per === '1' && sum >= '10000000' && sum < '50000000') {
-            return result = '2.25'
-        }
-
-        if (per === '1' && sum >= '50000000') {
-            return result = '3'
-        }
-
-        if (per > '1' && per < '7' && sum >= '1000000' && sum < '10000000') {
-            return result = '3.25'
-        }
-
-        if (per > '1' && per < '7' && sum >= '10000000' && sum < '50000000') {
-            return result = '4'
-        }
-
-        if (per > '1' && per < '7' && sum >= '50000000') {
-            return result = '4.25'
-        }
-
-        if (per > '6' && per < '14' && sum >= '1000000' && sum < '10000000') {
-            return result = '3.5'
-        }
-
-        if (per > '6' && per < '14' && sum >= '10000000' && sum < '50000000') {
-            return result = '4.05'
-        }
-
-        if (per > '6' && per < '14' && sum >= '50000000') {
-            return result = '4.25'
-        }
-
-        if (per > '13' && per < '21' && sum >= '1000000' && sum < '10000000') {
-            return result = '3.75'
-        }
-
-        if (per > '13' && per < '21' && sum >= '100000000' && sum < '50000000') {
-            return result = '4.1'
-        }
-
-        if (per > '13' && per < '21' && sum >= '50000000') {
-            return result = '4.25'
-        }
-
-        if (per > '20' && per < '31' && sum >= '1000000' && sum < '10000000') {
-            return result = '4'
-        }
-
-        if (per > '20' && per < '31' && sum >= '100000000' && sum < '50000000') {
-            return result = '4.15'
-        }
-
-        if (per > '20' && per < '31' && sum >= '50000000') {
-            return result = '4.25'
-        }
-
-        if (per > '30' && per < '91' && sum >= '1000000' && sum < '10000000') {
-            return result = '4.9'
-        }
-
-        if (per > '30' && per < '91' && sum >= '100000000' && sum < '50000000') {
-            return result = '5.15'
-        }
-
-        if (per > '30' && per < '91' && sum >= '50000000') {
-            return result = '5.4'
-        }
-
-        if (per > '90' && sum >= '1000000' && sum < '10000000') {
-            return result = '4.8'
-        }
+    function createLabel(number: number, titles: string[]) {
+        const cases = [2, 0, 1, 1, 1, 2];
+        return `${titles[number % 100 > 4 && number % 100 < 20 ? 2 : cases[number % 10 < 5 ? number % 10 : 5]]}`;
     }
+
+    const depositOptions = React.useMemo(() => (
+        depositTypes.map(item => (
+            {value: item, content: item}
+        ))
+    ), [])
 
     return (
         <div className="wrapper">
@@ -118,40 +85,88 @@ const DepositsCalc = (props: DepositsCalcProps) => {
                 <p className="text">
                     Тип вклада:
                 </p>
-                <select className='select'>
-                    {depositName}
-                </select>
+                <CustomSelect
+                    value={deposit}
+                    onChange={onChangeDeposit}
+                    options={depositOptions}
+                />
             </div>
             <div className="item">
                 <p className="text">
                     Сумма вклада:
                 </p>
-                <input
-                    className='input'
-                    type='number'
-                    value={sumValue}
-                    onChange={onChangeValue}
-                    placeholder='Введите сумму'
-                />
+                {deposit === 'Универсальный' && <input
+                  className='input'
+                  type='number'
+                  value={inputSum}
+                  onChange={onChangeUnicSum}
+                    // onChange={onChangeSum}
+                  placeholder='Введите сумму'
+                />}
+                {deposit === 'Стандартный' && <input
+                  className='input'
+                  type='number'
+                  value={inputSum}
+                  onChange={onChangeStandSum}
+
+                    // onChange={onChangeSum}
+                  placeholder='Введите сумму'
+                />}
+                {deposit === 'Пополняемый' && <input
+                  className='input'
+                  type='number'
+                  value={inputSum}
+                  onChange={onChangeReplSum}
+
+                    // onChange={onChangeSum}
+                  placeholder='Введите сумму'
+                />}
             </div>
             <div className="item">
                 <p className="text">
-                    Срок вклада:
+                    Срок вклада(дней):
                 </p>
-                <input
-                    className='input'
-                    type='number'
-                    value={period}
-                    onChange={onChangeValue}
-                    placeholder='Введите сумму'
+                {deposit === 'Универсальный' && <input
+                  className='input'
+                    // type='number'
+                  placeholder='Количество дней'
+                  value={inputPeriod}
+                  onChange={onChangeUnicPeriod}
                 />
+                }
+                {deposit === 'Стандартный' && <input
+                  className='input'
+                  type='number'
+                  placeholder='Количество дней'
+                  value={inputPeriod}
+                  onChange={onChangeStandPeriod}
+
+                />}
+                {deposit === 'Пополняемый' && <input
+                  className='input'
+                  type='number'
+                  placeholder='Количество дней'
+                  value={inputPeriod}
+                  onChange={onChangeReplPeriod}
+
+                />}
+
             </div>
             <div className="item">
                 <p className="text">
                     Процентная ставка:
                 </p>
-                {/*<p>{unicPercent}</p>*/}
+                {deposit === 'Универсальный' && <p>
+                    {unicBet}
+                </p>}
+                {deposit === 'Стандартный' && <p>
+                    {standBet}
+                </p>}
+                {deposit === 'Пополняемый' && <p>
+                    {replBet}
+                </p>}
             </div>
+            {/*<button onClick={unicResultClick}>Рассчитать</button>*/}
         </div>
     );
 };

@@ -32,6 +32,7 @@
     height: 50px;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .text {
@@ -59,4 +60,9 @@
     border: 1px solid gray;
     background: #090909;
     color: white;
+}
+
+.inputPeriod {
+    display: flex;
+    align-items: center;
 }
