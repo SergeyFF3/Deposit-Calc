@@ -1,5 +1,4 @@
 import React from 'react';
-import {DepositType} from "../data/data";
 
 export interface SelectOptions {
     value?: string
@@ -35,6 +34,7 @@ const CustomSelect = (props: CustomSelectProps) => {
 
     return (
         <select
+            className='select'
             value={value}
             onChange={onChangeHandler}
         >

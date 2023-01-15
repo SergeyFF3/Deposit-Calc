@@ -1,5 +1,5 @@
-export
-const percentStandartValue = (sum: number, per: number) => {
+
+export const percentStandartValue = (sum: number, per: number) => {
 
     let result = undefined
 

@@ -1,3 +1,4 @@
+
 export  const percentReplenishValue = (sum: number, per: number) => {
 
     let result = undefined
@@ -9,8 +10,6 @@ export  const percentReplenishValue = (sum: number, per: number) => {
     if (per > 120 && sum >= 50000000) {
         return result = 4.75
     }
-
-
 
     return result
 }
